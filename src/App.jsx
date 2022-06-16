@@ -11,7 +11,7 @@ export default function App() {
   const [ticket_price, setTicketPrice] = useState(null);
   const [raffleOwner, setRaffleOwner] = useState(null);
   const [totalPrize, setTotalPrize] = useState(null);
-  const contractAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0';
+  const contractAddress = '0xF17031E12686F6042ec9dc96516Bb4deF8148064';
   const contractABI = abi.abi;
 
   const requestConnect = async () => {
@@ -39,13 +39,13 @@ export default function App() {
         const raffleContract = new ethers.Contract(contractAddress, contractABI, signer);
 
         let total = await raffleContract.totalTickets();
-        setTotalTickets(parseInt(total, 16));
+        setTotalTickets(parseInt(total));
         console.log("bank " + total);
         let soldedIten = [];
         for (let index = 0; index < total; index++) {
           let x = await raffleContract.raffle_ticket(index);
           if (x != "0x0000000000000000000000000000000000000000")
-            soldedIten.push(index + 1);
+            soldedIten.push(index);
           console.log(x);
         }
         setSoldedTickets(soldedIten);
@@ -108,19 +108,11 @@ const finishRaffle = async (ticket) => {
   return <div className="container">
     {/* Se não estiver connectado, chamar botão de connect. */}
     {!isWalletConnected && <ConnectButton requestConnect={requestConnect}></ConnectButton>}
-    <h1>{totalPrize}</h1>
-    {raffleOwner && raffleOwner.toLowerCase() == customerAddress.toLowerCase() && <button className="btn btn-primary" onClick={()=> finishRaffle()}>Finish raffle</button>}
-    {/*Se estiver connectado, chamar grid de números.  */}
+    <h2>Prize: {totalPrize}</h2>
+    
     {isWalletConnected && <GridTicket currentPrice={ticket_price} totalTickets={totalTickets} buyFunction={buy} soldedTickets={soldedTickets}></GridTicket>}
-    {/* Se for owner aparece o botão de setwinner junto com o grid. */}
-
-
-    {/* <div className="flex space-x-4">
-      {!isWalletConnected && <p className="text-slate-500 p-3">You need connect wallet to participate at raffle</p>}
-      {isWalletConnected && <p className="text-slate-500 p-3">
-          Get totalNumber by totalTickets and tickets;
-        </p>}
-    </div> */}
+    
+    {raffleOwner && raffleOwner.toLowerCase() == customerAddress.toLowerCase() && <div><button className="btn btn-primary float-end mt-4" onClick={()=> finishRaffle()}>Finish raffle</button></div>}
   </div>;
 
 
