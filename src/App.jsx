@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import ConnectButton from "./Connect";
 import GridTicket from "./GridTicket";
 import abi from "./contract/Raffle.json";
-import { ethers, utils } from "ethers";
+import { BigNumber, ethers, utils } from "ethers";
+import _BN from "bn.js";
 export default function App() {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [totalTickets, setTotalTickets] = useState(0);
-  const [soldedTickets, setSoldedTickets] = useState([]);
+  const [soldedTickets, setSoldedTickets] = useState(null);
   const [customerAddress, setCustomerAddress] = useState(null);
   const [ticket_price, setTicketPrice] = useState(null);
   const [raffleOwner, setRaffleOwner] = useState(null);
@@ -40,7 +41,12 @@ export default function App() {
 
         let total = await raffleContract.totalTickets();
         setTotalTickets(parseInt(total));
-        console.log("bank " + total);
+        const totalPrize = await raffleContract.totalPrize();
+
+        const price = await raffleContract.ticket_price();
+        setTicketPrice(ethers.utils.formatUnits(price));
+        
+        setTotalPrize(ethers.utils.formatUnits(BigNumber.from(price).mul(BigNumber.from(total))));
         let soldedIten = [];
         for (let index = 0; index < total; index++) {
           let x = await raffleContract.raffle_ticket(index);
@@ -49,13 +55,10 @@ export default function App() {
           console.log(x);
         }
         setSoldedTickets(soldedIten);
-        const price = await raffleContract.ticket_price();
-        setTicketPrice(ethers.utils.formatUnits(price));
         let owner = await raffleContract.raffleOwner();
         setRaffleOwner(owner);
-        const totalPrize = await raffleContract.totalPrize();
-        setTotalPrize(ethers.utils.formatUnits(totalPrize));
-        console.log(owner)
+
+
       } else {
         console.log("Ethereum object not found, install Metamask.");
         setError("Please install a MetaMask wallet to use our bank.");
@@ -85,7 +88,7 @@ export default function App() {
     }
   }
 
-const finishRaffle = async (ticket) => {
+  const finishRaffle = async (ticket) => {
     try {
       if (window.ethereum) {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -108,11 +111,10 @@ const finishRaffle = async (ticket) => {
   return <div className="container">
     {/* Se não estiver connectado, chamar botão de connect. */}
     {!isWalletConnected && <ConnectButton requestConnect={requestConnect}></ConnectButton>}
-    {isWalletConnected &&<h2>Prize: {totalPrize}</h2>}
-    
+    {isWalletConnected && <h2>Prize: {totalPrize}</h2>}
     {isWalletConnected && <GridTicket currentPrice={ticket_price} totalTickets={totalTickets} buyFunction={buy} soldedTickets={soldedTickets}></GridTicket>}
-    
-    {raffleOwner && raffleOwner.toLowerCase() == customerAddress.toLowerCase() && <div><button className="btn btn-primary float-end mt-4" onClick={()=> finishRaffle()}>Finish raffle</button></div>}
+
+    {raffleOwner && raffleOwner.toLowerCase() == customerAddress.toLowerCase() && <div><button className="btn btn-primary float-end mt-4" onClick={() => finishRaffle()}>Finish raffle</button></div>}
   </div>;
 
 
