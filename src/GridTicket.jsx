@@ -21,7 +21,7 @@ export default function GridTicket(props) {
             setTickets([]);
             var items = []
             for (let index = 0; index < props.totalTickets; index++) {
-                items.push(TicketItem(index, props.buyFunction, props.soldedTickets && props.soldedTickets.some(x => x == index)));
+                items.push(TicketItem(index, props.buyFunction, props.soldedTickets == null || (props.soldedTickets && props.soldedTickets.some(x => x == index))));
             }
            
             setTickets(items);
