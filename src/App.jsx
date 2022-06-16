@@ -108,7 +108,7 @@ const finishRaffle = async (ticket) => {
   return <div className="container">
     {/* Se não estiver connectado, chamar botão de connect. */}
     {!isWalletConnected && <ConnectButton requestConnect={requestConnect}></ConnectButton>}
-    <h2>Prize: {totalPrize}</h2>
+    {isWalletConnected &&<h2>Prize: {totalPrize}</h2>}
     
     {isWalletConnected && <GridTicket currentPrice={ticket_price} totalTickets={totalTickets} buyFunction={buy} soldedTickets={soldedTickets}></GridTicket>}
     
