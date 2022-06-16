@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/dapp_eth_raffle/static/css/main.52dec4a8.css",
+    "main.js": "/dapp_eth_raffle/static/js/main.f2cfd68d.js",
+    "static/js/787.e39e03c7.chunk.js": "/dapp_eth_raffle/static/js/787.e39e03c7.chunk.js",
+    "static/media/metamask.svg": "/dapp_eth_raffle/static/media/metamask.09e5f554ca7f2e9f93b4d3c237976b65.svg",
+    "index.html": "/dapp_eth_raffle/index.html",
+    "main.52dec4a8.css.map": "/dapp_eth_raffle/static/css/main.52dec4a8.css.map",
+    "main.f2cfd68d.js.map": "/dapp_eth_raffle/static/js/main.f2cfd68d.js.map",
+    "787.e39e03c7.chunk.js.map": "/dapp_eth_raffle/static/js/787.e39e03c7.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.52dec4a8.css",
+    "static/js/main.f2cfd68d.js"
+  ]
+}
